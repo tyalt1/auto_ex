@@ -26,9 +26,7 @@ defmodule AutoEx.Signal do
   @doc "Add action associated with signal."
   @spec add_action(signal, Action.action | [Action.action]) :: :ok
   def add_action(signal, actions) when is_list(actions) do
-    for action <- actions do
-      GenServer.cast(signal, {:add_action, action})
-    end
+    Enum.each(actions, fn act -> GenServer.cast(signal, {:add_action, act}) end)
   end
   def add_action(signal, action) do
     GenServer.cast(signal, {:add_action, action})

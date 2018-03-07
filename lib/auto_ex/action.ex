@@ -42,6 +42,12 @@ defmodule AutoEx.Action do
   end
 
   @doc false
+  def handle_cast(:run, _from, state) do
+    exec_action(state.fun)
+    {:reply, state}
+  end
+
+  @doc false
   def handle_call(:run, _from, state) do
     {:reply, exec_action(state.fun), state}
   end
