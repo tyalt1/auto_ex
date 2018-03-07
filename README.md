@@ -54,7 +54,6 @@ Signal.add_action(MySignal, MyAction)
 
 ## TODO
 - Tests!
-- Signal has multiple actions
 - Action retry
 - Logging when signal is fired
 - Logging when action is executed (successful/failure)
