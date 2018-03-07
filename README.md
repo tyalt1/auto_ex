@@ -49,13 +49,11 @@ When an action is added to a signal, it is run whenever the signal is.
 
 ```elixir
 alias AutoEx.Signal
-AutoEx.Signal.add_action(MySignal, MyAction)
+Signal.add_action(MySignal, MyAction)
 ```
 
 ## TODO
 - Tests!
-- Doc generation
-- Dialyzer (type check)
 - Signal has multiple actions
 - Action retry
 - Logging when signal is fired
