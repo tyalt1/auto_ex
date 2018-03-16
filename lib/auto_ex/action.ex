@@ -5,58 +5,36 @@ defmodule AutoEx.Action do
 
   """
 
-  use GenServer
+  @enforce_keys [:fun]
+  defstruct [
+    :fun
+  ]
 
-  @type action :: GenServer.server()
+  @opaque action :: %AutoEx.Action{fun: action_fun}
 
-  @type action_fun ::
-          (() -> term)
-          | {module :: atom, function :: atom, args :: [term]}
+  @type action_fun :: {:fun, (() -> term)} | {:mfa, {module, atom, [term]}}
 
-  @type state :: %{fun: action_fun}
-
-  @doc "Start new action."
-  @spec start_link(action_fun) :: action
-  def start_link(fun, options \\ []) do
-    GenServer.start_link(__MODULE__, fun, options)
+  @doc "Create new Action."
+  @spec new(action_fun) :: action
+  def new(function) when is_function(function, 0) do
+    %AutoEx.Action{fun: {:fun, function}}
+  end
+  def new({module, function, args}) do
+    %AutoEx.Action{fun: {:mfa, {module, function, args}}}
   end
 
-  @doc "Manually trigger action."
+  @doc "Perform Action. NOTE: This call is blocking."
   @spec run(action) :: :ok
-  def run(action) do
-    GenServer.call(action, :run)
+  def run(action = %AutoEx.Action{}) do
+    do_action(action.fun)
+    :ok
   end
 
   @doc false
-  def init(fun) do
+  defp do_action(fun) do
     case fun do
-      {module, function, args} ->
-        {:ok, %{fun: {module, function, args}}}
-
-      function when is_function(function, 0) ->
-        {:ok, %{fun: function}}
-
-      _ ->
-        {:stop, :incorrect_action_fun}
-    end
-  end
-
-  @doc false
-  def handle_cast(:run, _from, state) do
-    exec_action(state.fun)
-    {:reply, state}
-  end
-
-  @doc false
-  def handle_call(:run, _from, state) do
-    {:reply, exec_action(state.fun), state}
-  end
-
-  @doc false
-  defp exec_action(fun) do
-    case fun do
-      {module, function, args} -> apply(module, function, args)
-      function when is_function(function, 0) -> apply(function, [])
+      {:mfa, {module, function, args}} -> apply(module, function, args)
+      {:fun, function} -> apply(function, [])
     end
   end
 end

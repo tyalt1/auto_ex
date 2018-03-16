@@ -23,7 +23,7 @@ defmodule AutoExTest do
   test "basic signal" do
     work = MockWork.new
 
-    {:ok, action} = Action.start_link({MockWork, :do_work, [work]})
+    action = Action.new({MockWork, :do_work, [work]})
 
     {:ok, signal} = Signal.start_link()
     Signal.add_action(signal, action)
@@ -37,9 +37,9 @@ defmodule AutoExTest do
     work2 = MockWork.new
     work3 = MockWork.new
 
-    {:ok, action1} = Action.start_link({MockWork, :do_work, [work1]})
-    {:ok, action2} = Action.start_link({MockWork, :do_work, [work2]})
-    {:ok, action3} = Action.start_link({MockWork, :do_work, [work3]})
+    action1 = Action.new({MockWork, :do_work, [work1]})
+    action2 = Action.new({MockWork, :do_work, [work2]})
+    action3 = Action.new({MockWork, :do_work, [work3]})
 
     {:ok, signal} = Signal.start_link()
     Signal.add_action(signal, [action1, action2, action3])

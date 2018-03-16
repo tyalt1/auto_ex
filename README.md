@@ -28,8 +28,8 @@ A signal is an event that triggers all actions linked to it.
 ```elixir
 alias AutoEx.Signal
 
-Signal.start_link(name: MySignal) #Create named signal
-Signal.run(MySignal) #Call all actions linked with signal
+{:ok, pid} = Signal.start_link()
+Signal.run(pid)
 ```
 
 ### Action
@@ -39,8 +39,8 @@ An action is a stand alone function.
 ```elixir
 alias AutoEx.Action
 
-Action.start_link(fn -> IO.puts "Performing action!" end, name: MyAction)
-Action.run(MyAction)
+action = Action.new(fn -> IO.puts "Performing action!" end)
+Action.run(action)
 ```
 
 ### Link Signal with Actions
@@ -49,7 +49,10 @@ When an action is added to a signal, it is run whenever the signal is.
 
 ```elixir
 alias AutoEx.Signal
-Signal.add_action(MySignal, MyAction)
+
+{:ok, signal} = Signal.start_link()
+action = Action.new(fn -> IO.puts "Performing action!" end)
+Signal.add_action(signal, action)
 ```
 
 ## TODO
