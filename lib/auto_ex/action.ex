@@ -28,22 +28,19 @@ defmodule AutoEx.Action do
 
   @doc "Perform Action. NOTE: This call is blocking."
   @spec run(t) :: :ok
-  def run(action = %Action{}) do
-    do_run(action)
+  def run(action = %Action{async: async}) do
+    if async do
+      Task.start(fn -> do_run(action) end)
+    else
+      do_run(action)
+    end
     :ok
   end
 
-  defp do_run(%AutoEx.Action{fun: fun, async: false}) do
+  defp do_run(%AutoEx.Action{fun: fun}) do
     case fun do
       {:mfa, {module, function, args}} -> apply(module, function, args)
       {:fun, function} -> apply(function, [])
-    end
-  end
-
-  defp do_run(%AutoEx.Action{fun: fun, async: true}) do
-    case fun do
-      {:mfa, {module, function, args}} -> Task.start(module, function, args)
-      {:fun, function} -> Task.start(function)
     end
   end
 end
