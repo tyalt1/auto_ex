@@ -18,10 +18,11 @@ defmodule AutoEx.Action do
   @spec new(action_fun) :: action
   def new(fun, opts \\ []) do
     %Action{
-      fun: case fun do
-        {module, function, args} -> {:mfa, {module, function, args}}
-        function when is_function(function, 0) -> {:fun, function}
-      end,
+      fun:
+        case fun do
+          {module, function, args} -> {:mfa, {module, function, args}}
+          function when is_function(function, 0) -> {:fun, function}
+        end,
       async: Keyword.get(opts, :async, false)
     }
   end
@@ -39,6 +40,7 @@ defmodule AutoEx.Action do
       {:fun, function} -> apply(function, [])
     end
   end
+
   defp do_run(%AutoEx.Action{fun: fun, async: true}) do
     case fun do
       {:mfa, {module, function, args}} -> Task.start(module, function, args)

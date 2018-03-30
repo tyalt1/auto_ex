@@ -1,14 +1,16 @@
 defmodule MockWork do
-  defstruct [work: false, prework: nil, postwork: nil]
+  defstruct work: false, prework: nil, postwork: nil
 
   def new(opts \\ []) do
-    {:ok, work} = Agent.start_link(fn ->
-      %MockWork{
-        work: false,
-        prework: Keyword.get(opts, :prework),
-        postwork: Keyword.get(opts, :postwork),
-      }
-    end)
+    {:ok, work} =
+      Agent.start_link(fn ->
+        %MockWork{
+          work: false,
+          prework: Keyword.get(opts, :prework),
+          postwork: Keyword.get(opts, :postwork)
+        }
+      end)
+
     work
   end
 
@@ -40,7 +42,7 @@ defmodule AutoExTest do
   doctest AutoEx
 
   test "basic signal" do
-    work = MockWork.new
+    work = MockWork.new()
 
     action = Action.new({MockWork, :do_work, [work]})
 
@@ -52,9 +54,9 @@ defmodule AutoExTest do
   end
 
   test "signal with multiple actions" do
-    work1 = MockWork.new
-    work2 = MockWork.new
-    work3 = MockWork.new
+    work1 = MockWork.new()
+    work2 = MockWork.new()
+    work3 = MockWork.new()
 
     action1 = Action.new({MockWork, :do_work, [work1]})
     action2 = Action.new({MockWork, :do_work, [work2]})
