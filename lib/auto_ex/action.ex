@@ -10,12 +10,11 @@ defmodule AutoEx.Action do
   @enforce_keys [:fun]
   defstruct [:fun, async: false]
 
-  @opaque action :: %AutoEx.Action{fun: action_fun, async: boolean}
-
+  @type t :: %AutoEx.Action{fun: action_fun, async: boolean}
   @type action_fun :: {:fun, (() -> term)} | {:mfa, {module, atom, [term]}}
 
   @doc "Create new Action."
-  @spec new(action_fun) :: action
+  @spec new((() -> term) | {module, atom, [term]}, [term]) :: t
   def new(fun, opts \\ []) do
     %Action{
       fun:
@@ -28,7 +27,7 @@ defmodule AutoEx.Action do
   end
 
   @doc "Perform Action. NOTE: This call is blocking."
-  @spec run(action) :: :ok
+  @spec run(t) :: :ok
   def run(action = %Action{}) do
     do_run(action)
     :ok

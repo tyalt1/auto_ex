@@ -8,23 +8,23 @@ defmodule AutoEx.Signal do
   use GenServer
   alias AutoEx.Action
 
-  @type signal :: GenServer.server()
-  @type state :: %{actions: MapSet.t(Action.action())}
+  @type t :: GenServer.server()
+  @type state :: %{actions: MapSet.t(Action.t())}
 
   @doc "Start new signal."
-  @spec start_link([term]) :: {:ok, pid | atom}
+  @spec start_link([term]) :: t
   def start_link(options \\ []) do
     GenServer.start_link(__MODULE__, nil, options)
   end
 
   @doc "Get action associated with signal."
-  @spec get_action(signal) :: MapSet.t(Action.action())
+  @spec get_action(t) :: MapSet.t(Action.t())
   def get_action(signal) do
     GenServer.call(signal, :get_action)
   end
 
   @doc "Add action associated with signal."
-  @spec add_action(signal, Action.action() | [Action.action()]) :: :ok
+  @spec add_action(t, Action.t() | [Action.t()]) :: :ok
   def add_action(signal, actions) when is_list(actions) do
     Enum.each(actions, fn act -> GenServer.cast(signal, {:add_action, act}) end)
   end
@@ -34,13 +34,13 @@ defmodule AutoEx.Signal do
   end
 
   @doc "Trigger action associated with signal. This call is blocking."
-  @spec run(signal) :: [:ok | :no_action]
+  @spec run(t) :: [:ok | :no_action]
   def run(signal) do
     GenServer.call(signal, :run)
   end
 
   @doc "Trigger action associated with signal. This call is non-blocking."
-  @spec async_run(signal) :: :ok
+  @spec async_run(t) :: :ok
   def async_run(signal) do
     GenServer.cast(signal, :run)
   end
@@ -48,7 +48,7 @@ defmodule AutoEx.Signal do
   # ----- Callbacks -----
 
   @doc false
-  def init(nil) do
+  def init(_) do
     {:ok, %{actions: MapSet.new()}}
   end
 
