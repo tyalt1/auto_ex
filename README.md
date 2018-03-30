@@ -48,11 +48,12 @@ Action.run(action)
 When an action is added to a signal, it is run whenever the signal is.
 
 ```elixir
-alias AutoEx.Signal
+alias AutoEx.{Signal, Action}
 
 {:ok, signal} = Signal.start_link()
 action = Action.new(fn -> IO.puts "Performing action!" end)
 Signal.add_action(signal, action)
+Singal.run(signal)
 ```
 
 ## TODO
