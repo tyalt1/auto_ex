@@ -56,6 +56,12 @@ Signal.add_action(signal, action)
 Singal.run(signal)
 ```
 
+### Resource
+
+Advantages on Resource:
+- crud semantics
+- persistance
+
 ## TODO
 - Tests!
 - Action retry

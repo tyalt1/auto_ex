@@ -22,7 +22,8 @@ defmodule AutoEx.MixProject do
   defp deps do
     [
       {:ex_doc, "~> 0.16", only: :dev, runtime: false},
-      {:dialyxir, "~> 0.5", only: [:dev], runtime: false}
+      {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
+      {:elixir_uuid, "~> 1.2"}
     ]
   end
 end
