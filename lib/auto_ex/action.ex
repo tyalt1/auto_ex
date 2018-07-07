@@ -34,6 +34,7 @@ defmodule AutoEx.Action do
     else
       do_run(action)
     end
+
     :ok
   end
 

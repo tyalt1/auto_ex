@@ -75,8 +75,10 @@ defmodule AutoEx.Resource do
     case apply(module, fun, [args, state]) do
       {:ok, new_state} ->
         {:reply, :ok, Map.put(master_state, :state, new_state)}
+
       {:ok, payload, new_state} ->
         {:reply, payload, Map.put(master_state, :state, new_state)}
+
       {:error, reason, new_state} ->
         {:reply, {:error, reason}, Map.put(master_state, :state, new_state)}
     end
