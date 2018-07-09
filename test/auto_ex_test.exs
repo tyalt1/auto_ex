@@ -44,7 +44,7 @@ defmodule AutoExTest do
   test "basic signal" do
     work = MockWork.new()
 
-    action = Action.new({MockWork, :do_work, [work]})
+    action = Action.new(MockWork, :do_work, [work])
 
     {:ok, signal} = Signal.start_link()
     Signal.add_action(signal, action)
@@ -58,9 +58,9 @@ defmodule AutoExTest do
     work2 = MockWork.new()
     work3 = MockWork.new()
 
-    action1 = Action.new({MockWork, :do_work, [work1]})
-    action2 = Action.new({MockWork, :do_work, [work2]})
-    action3 = Action.new({MockWork, :do_work, [work3]})
+    action1 = Action.new(MockWork, :do_work, [work1])
+    action2 = Action.new(MockWork, :do_work, [work2])
+    action3 = Action.new(MockWork, :do_work, [work3])
 
     {:ok, signal} = Signal.start_link()
     Signal.add_action(signal, [action1, action2, action3])
@@ -74,9 +74,9 @@ defmodule AutoExTest do
     work2 = MockWork.new(prework: fn -> :timer.sleep(1000) end)
     work3 = MockWork.new(prework: fn -> :timer.sleep(1000) end)
 
-    action1 = Action.new({MockWork, :do_work, [work1]}, async: true)
-    action2 = Action.new({MockWork, :do_work, [work2]}, async: true)
-    action3 = Action.new({MockWork, :do_work, [work3]}, async: true)
+    action1 = Action.new(MockWork, :do_work, [work1], async: true)
+    action2 = Action.new(MockWork, :do_work, [work2], async: true)
+    action3 = Action.new(MockWork, :do_work, [work3], async: true)
 
     {:ok, signal} = Signal.start_link()
     Signal.add_action(signal, [action1, action2, action3])
