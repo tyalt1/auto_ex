@@ -8,7 +8,7 @@ defmodule AutoEx.Resource do
   @type error :: {:error, reason :: String.t()}
   @type error_state :: {:error, reason :: String.t(), state :: any}
   @type result :: ok | error
-  @type result_state :: ok_state | ok_payload_state | error_state
+  @type result_state :: ok_state | ok_payload_state | error | error_state
   @type terminate_reason :: :normal | :shutdown | {:shutdown, term()}
 
   @callback init(args :: any) :: ok_state | error
@@ -78,6 +78,9 @@ defmodule AutoEx.Resource do
 
       {:ok, payload, new_state} ->
         {:reply, payload, Map.put(master_state, :state, new_state)}
+
+      {:error, reason} ->
+        {:reply, {:error, reason}}
 
       {:error, reason, new_state} ->
         {:reply, {:error, reason}, Map.put(master_state, :state, new_state)}
