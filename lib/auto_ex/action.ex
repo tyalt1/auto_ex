@@ -11,9 +11,11 @@ defmodule AutoEx.Action do
 
   @type t :: %Action{fun: action_fun, async: boolean}
   @type action_fun :: {:fun, (() -> term)} | {:mfa, module, atom, [term]}
+  @type new_options :: [new_option]
+  @type new_option :: {:async, boolean}
 
-  @doc "Create new Action."
-  @spec new((() -> term) | {module, atom, [term]}, [term]) :: t
+  @doc "Create new Action with an anonymous function."
+  @spec new((() -> term), new_options) :: t
   def new(fun, opts \\ []) when is_function(fun, 0) do
     %Action{
       fun: {:fun, fun},
@@ -21,6 +23,8 @@ defmodule AutoEx.Action do
     }
   end
 
+  @doc "Create new Action with a mfa (module, function, arguments)."
+  @spec new(module, atom, [term], new_options) :: t
   def new(module, fun, args, opts \\ [])
       when is_atom(module) and is_atom(fun) and is_list(args) do
     %Action{
