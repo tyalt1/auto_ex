@@ -67,3 +67,5 @@ Advantages on Resource:
 - Action retry
 - Logging when signal is fired
 - Logging when action is executed (successful/failure)
+- persistance for resource
+- documenting resource
